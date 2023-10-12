@@ -37,6 +37,7 @@ to check-nuclear-explosion ; procedure to simulare nuclear plant explosion killi
   ask patches with [is-nuclear-plant?] [
     if random-float 1 < explosion-rate [
       print (word "A nuclear plant has exploded on year " ticks "!")
+      print (word  "Popullation was - " count people "!")
       let victims (count people) / 4
       ; kill a quarter of the current population
       ask n-of victims people [ die ]
@@ -52,7 +53,6 @@ to check-nuclear-explosion ; procedure to simulare nuclear plant explosion killi
         set pcolor 5  ; Color makes patches in light gray
         set exploded? true  ; Mark makes patches as exploded
       ]
-      print (word  "Popullation was - " count people "!")
       print (word  "People died - " victims "!")
       set ticks-since-explosion 0
     ]
@@ -311,6 +311,7 @@ to check-nuclear-explosion ; procedure to simulare nuclear plant explosion killi
   ask patches with [is-nuclear-plant?] [
     if random-float 1 < explosion-rate [
       print (word "A nuclear plant has exploded on year " ticks "!")
+      print (word  "Popullation was - " count people "!")
       let victims (count people) / 4
       ; kill a quarter of the current population
       ask n-of victims people [ die ]
@@ -326,7 +327,6 @@ to check-nuclear-explosion ; procedure to simulare nuclear plant explosion killi
         set pcolor 5  ; Color makes patches in light gray
         set exploded? true  ; Mark makes patches as exploded
       ]
-      print (word  "Popullation was - " count people "!")
       print (word  "People died - " victims "!")
       set ticks-since-explosion 0
     ]

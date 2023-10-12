@@ -158,6 +158,9 @@ end
 ![Вплив кількості вугільних та атомних електростанцій на кількість дерев](exp2.png)<br>
 Графік наочно показує, що збільшення кількості електростанцій в цілому впливає позитивно на збільшення кількості дерев. Але при вибуху атомних електростанцій кількість дерев значно зменьшується, бо вони одразу знщуються у радіусі станції
 
+### Фінальний вид моделі
+![Стан моделі через 232 роки.](model_view.png)<br>
+
 ### Фінальний код моделі
 <pre>
 breed [ people person ]
@@ -242,7 +245,7 @@ to create-nuclear-plants
   ]
 end
 
-to pollute  ; patch procedure
+to pollute  ; pollution spreading procedure
   if is-power-plant? and not is-nuclear-plant? and not exploded? [
     set pcolor red
     set pollution polluting-rate
@@ -252,7 +255,7 @@ to pollute  ; patch procedure
   ]
 end
 
-to cleanup
+to cleanup ; pollution decreasing procedure
   set pcolor green + 3
   set pollution max (list 0 (pollution - 1))
   ask neighbors [
@@ -261,14 +264,14 @@ to cleanup
   set health health - 0.1
 end
 
-to wander  ; person procedure
+to wander  ; people life light simulation procedure
   rt random-float 50
   lt random-float 50
   fd 1
   set health health - 0.1
 end
 
-to reproduce  ; person procedure
+to reproduce  ; people reproduction procedure
   if ticks-since-explosion > 5 [ ; delay in reproduction after a nuclear explosion
     let reproduction-chance birth-rate
 

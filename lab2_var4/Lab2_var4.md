@@ -11,9 +11,58 @@
 ### Вербальний опис моделі:
 [1 Лабораторна робота](../lab1_var4/Lab1_var4.md)
 
-### Внесені зміни у вихідну логіку моделі:
-Реалізувати позитивний вплив наявності на імітаційному полі електростанцій на вірогідність появи нових людей. Збільшити вірогідність висадки дерев у клітинах поблизу електростанцій. Додати атомні електростанції що мають змогу вибухнути(шанс вибуху задається) і зменьшити кількість людей на чверть. Також після вибуху електростанції люди не можуть розмножуватися найближчі 5 років.
+### Внесені зміни у вихідну логіку моделі, за варіантом 4:
+Реалізувати позитивний вплив наявності на імітаційному полі електростанцій на вірогідність появи нових людей. Збільшити вірогідність висадки дерев у клітинах поблизу електростанцій.
 
+
+Змінилась функція **reproduce**
+Перевірка чи не відбулося вибуху атомної станції чи він ще не був
+Підвищується шанс розмноження людей біля будь-якої електростанції
+<pre>
+to reproduce  ; people reproduction procedure
+  if ticks-since-explosion > 5 [ ; delay in reproduction after a nuclear explosion
+    let reproduction-chance birth-rate
+    if any? neighbors with [is-power-plant?] [
+      set reproduction-chance reproduction-chance + 0.1 ; increase reproduction-chance near power plant in 10%
+    ]
+    if any? neighbors with [is-nuclear-plant?] [
+      set reproduction-chance reproduction-chance + 0.2 ; increase reproduction-chance near nuclear plant in 20%
+    ]
+    if health > 4 and random-float 1 < reproduction-chance [
+      hatch-people 1 [
+        set health 5
+      ]
+    ]
+  ]
+end
+</pre>
+
+
+Змінилась функція **maybe-plant**
+Перевірка чи теперішній патч не підірваний, і підвищується шанс саджання дерева біля будь-якої електростанції
+<pre>
+to maybe-plant  ; procedure determine chance to plant
+  if not exploded? [
+    let plant-chance planting-rate
+    if any? neighbors with [is-power-plant?] [
+      set plant-chance plant-chance + 0.15  ; increase plant-chance near power plant in 15%
+    ]
+    if any? neighbors with [is-nuclear-plant?] [
+      set plant-chance plant-chance + 0.25  ; increase plant-chance near nuclear plant in 25%
+    ]
+    if random-float 1 < plant-chance [
+      hatch-trees 1 [
+        set health 5
+        set color green
+      ]
+    ]
+  ]
+end
+</pre>
+
+### Внесені зміни у вихідну логіку моделі, на власний розсуд:
+ Додано атомні електростанції що мають змогу вибухнути(шанс вибуху задається) і зменьшити кількість людей на чверть. Також після вибуху електростанції люди не можуть розмножуватися найближчі 5 років.
+ Атомні електростанції не мають забруднення та сильніше 
 
 Додавання нового патчу типу **is-nuclear-plant?** та **exploded?**
 <pre>
@@ -55,50 +104,6 @@ to check-nuclear-explosion ; procedure to simulare nuclear plant explosion killi
       ]
       print (word  "People died - " victims "!")
       set ticks-since-explosion 0
-    ]
-  ]
-end
-</pre>
-
-Змінилась функція **maybe-plant**
-Перевірка чи теперішній патч не підірваний, і підвищується шанс саджання дерева біля будь-якої електростанції
-<pre>
-to maybe-plant  ; procedure determine chance to 
-  if not exploded? [
-    let plant-chance planting-rate
-    if any? neighbors with [is-power-plant?] [
-      set plant-chance plant-chance + 0.15  ; increase plant-chance near power plant in 15%
-    ]
-    if any? neighbors with [is-nuclear-plant?] [
-      set plant-chance plant-chance + 0.25  ; increase plant-chance near nuclear plant in 25%
-    ]
-    if random-float 1 < plant-chance [
-      hatch-trees 1 [
-        set health 5
-        set color green
-      ]
-    ]
-  ]
-end
-</pre>
-
-Змінилась функція **reproduce**
-Перевірка чи не відбулося вибуху атомної станції чи він ще не був
-Підвищується шанс розмноження людей біля будь-якої електростанції
-<pre>
-to reproduce  ; person procedure
-  if ticks-since-explosion > 5 [ ; delay in reproduction after a nuclear explosion
-    let reproduction-chance birth-rate
-    if any? neighbors with [is-power-plant?] [
-      set reproduction-chance reproduction-chance + 0.1 ; increase reproduction-chance near power plant in 10%
-    ]
-    if any? neighbors with [is-nuclear-plant?] [
-      set reproduction-chance reproduction-chance + 0.2 ; increase reproduction-chance near nuclear plant in 20%
-    ]
-    if health > 4 and random-float 1 < reproduction-chance [
-      hatch-people 1 [
-        set health 5
-      ]
     ]
   ]
 end
@@ -289,7 +294,7 @@ to reproduce  ; people reproduction procedure
   ]
 end
 
-to maybe-plant  ; procedure determine chance to 
+to maybe-plant ; procedure determine chance to plant
   if not exploded? [
     let plant-chance planting-rate
     if any? neighbors with [is-power-plant?] [
@@ -333,7 +338,7 @@ to check-nuclear-explosion ; procedure to simulare nuclear plant explosion killi
   ]
 end
 
-to eat-pollution  ; person procedure
+to eat-pollution ; procedure decrease health affected by pollution
   if pollution > 0.5 [
     set health (health - (pollution / 10))
   ]
@@ -347,3 +352,5 @@ end
 ; Copyright 2007 Uri Wilensky.
 ; See Info tab for full copyright and license.
 </pre>
+
+Фінальний код моделі та її інтерфейс доступні за [посиланням](lab4_pollution.nlogo).
